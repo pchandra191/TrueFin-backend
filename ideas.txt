@@ -1,0 +1,3 @@
+Admin-
+1. Data insert
+2. User Management
