@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = "mongodb+srv://taskoo:taskoo123@cluster0.atyrb9v.mongodb.net/trufin?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://taskoo:taskoo123@cluster0.atyrb9v.mongodb.net/trufin?retryWrites=true&w=majority&appName=Cluster0";
 
 export async function connectDB() {
   try {

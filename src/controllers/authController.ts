@@ -5,9 +5,8 @@ import bcrypt from "bcrypt";
 import Admin from "../models/Admin.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretjwtkey";
-const ADMIN_EMAIL = "sonivanshu012@gmail.com";
-const ADMIN_PASSWORD = "hail@Trufi1";
-console.log("email: ",ADMIN_EMAIL)
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "sonivanshu012@gmail.com";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "hail@Trufi1";
 
 interface LoginBody {
   email: string;
