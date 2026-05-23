@@ -1,4 +1,4 @@
-import express, { type Request, type Response, type NextFunction } from "express";
+import express, { type Request, type Response } from "express";
 import cors from "cors";
 import { connectDB } from "./utils/db.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -11,24 +11,19 @@ const app = express();
 
 const allowedOrigins = [
   "https://www.truefin.tech",
-  "https://truefin.tech",
   "http://localhost:5173",
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) {
-        callback(null, true);
-      } else if (allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -46,18 +41,11 @@ app.use("/api/track", trackRoutes);
 
 setupSwagger(app);
 
-// Handle 404
-app.use((_req: Request, res: Response) => {
-  res.status(404).json({ message: "Not found" });
-});
-
-// Centralized error handler
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: express.NextFunction) => {
   console.error("Unhandled error:", err);
   res.status(500).json({ message: "Internal server error" });
 });
 
-// Connect to DB (non-blocking)
-connectDB().catch(console.error);
+connectDB();
 
 export default app;
