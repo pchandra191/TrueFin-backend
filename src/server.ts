@@ -11,21 +11,27 @@ const app = express();
 
 const allowedOrigins = [
   "https://www.truefin.tech",
+  "https://truefin.tech",
   "http://localhost:5173",
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin) {
+      callback(null, true);
+    } else if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 app.get("/test-docs", (_req, res) => res.send("test works"));
@@ -43,7 +49,11 @@ setupSwagger(app);
 
 app.use((err: Error, _req: Request, res: Response, _next: express.NextFunction) => {
   console.error("Unhandled error:", err);
-  res.status(500).json({ message: "Internal server error" });
+  if (err.message === "Not allowed by CORS") {
+    res.status(403).json({ message: "CORS not allowed" });
+  } else {
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 connectDB();
