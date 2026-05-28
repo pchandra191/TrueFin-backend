@@ -17,10 +17,10 @@ export async function connectDB() {
 }
 
 mongoose.connection.on("disconnected", () => {
-console.log("⚠️ MongoDB disconnected, reconnecting...");
-setTimeout(connectDB, 5000);
+  console.log("⚠️ MongoDB disconnected, reconnecting...");
+  setTimeout(connectDB, 5000);
 });
 
 mongoose.connection.on("error", (err) => {
-console.error("MongoDB error:", err);
+  console.error("MongoDB error:", err);
 });

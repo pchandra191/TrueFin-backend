@@ -1,5 +1,4 @@
 import swaggerJsdoc from "swagger-jsdoc";
-import  swaggerUi from "swagger-ui-express";
 import { type Express, type Request, type Response } from "express";
 
 const options: swaggerJsdoc.Options = {
